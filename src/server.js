@@ -7,7 +7,8 @@ const dns = require('dns');
 const { MongoClient } = require('mongodb');
 const nanoid = require('nanoid');
 
-const databaseUrl = process.env.DATABASE;
+const databaseUrl = process.env.DBURL
+const database = process.env.DB
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -15,9 +16,9 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, 'public')))
 
-MongoClient.connect(databaseUrl, { useNewUrlParser: true })
+MongoClient.connect(databaseUrl, { useUnifiedTopology: true, useNewUrlParser: true })
   .then(client => {
-    app.locals.db = client.db('shortener');
+    app.locals.db = client.db(database);
   })
   .catch(() => console.error('Failed to connect to the database'));
 
